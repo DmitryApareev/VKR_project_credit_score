@@ -92,7 +92,7 @@ def run_pipeline_for_country(country_code: str, raw_path: Path) -> None:
         save_path=fig_dir / f"roc_all_models_{suffix}.png",
     )
 
-    # важность признаков — берём Random Forest (наглядно для диплома)
+    # важность признаков - берём Random Forest 
     rf = fitted.get("random_forest")
     if rf is not None and hasattr(rf, "feature_importances_"):
         visualization.plot_feature_importance(

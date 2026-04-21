@@ -148,8 +148,7 @@ _RU_TYPE_TO_PURPOSE = {
 
 def russia_bureau_to_unified(df: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
     """
-    Российский client_data: бакеты бюро. Возраста в файле нет — я оцениваю его грубо из pre_since_*
-    (в тексте диплома это нужно проговорить как ограничение данных).
+    Российский client_data: бакеты бюро. Возраста в файле нет — я оцениваю его грубо из pre_since_
     """
     n = len(df)
     ids = df["id"].astype(int).values

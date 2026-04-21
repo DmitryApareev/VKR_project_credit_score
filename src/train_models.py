@@ -15,7 +15,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 def get_models(random_state: int = 42) -> Dict[str, Any]:
     """
-    Словарь моделей. Параметры не «перебираем» — фиксированный разумный baseline для диплома.
+    Словарь моделей
     """
     models = {
         "logistic_regression": LogisticRegression(

@@ -1,6 +1,5 @@
 """
 Утилиты для диплома по кредитному скорингу: пути, папки, загрузка CSV.
-Сырые таблицы я всегда собираю из своих выгрузок через unify_external_sources (не генерирую с нуля).
 """
 
 from __future__ import annotations
@@ -31,7 +30,6 @@ def ensure_directories() -> None:
 def ensure_raw_datasets_exist() -> tuple[Path, Path]:
     """
     Пересобираю kazakhstan_credit.csv и russia_credit.csv из входных файлов
-    (incoming / Downloads / переменные окружения) — см. unify_external_sources.
     """
     ensure_directories()
     from unify_external_sources import build_unified_datasets
