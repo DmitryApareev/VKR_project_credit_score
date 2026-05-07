@@ -52,7 +52,10 @@ def run_pipeline_for_country(country_code: str, raw_path: Path, variant: str = "
 
     tables_dir = ROOT / "results" / "tables"
     metrics_dir = ROOT / "results" / "metrics"
-    fig_dir = ROOT / "results" / "figures" / country_code.lower()
+    if variant == "bootstrap":
+        fig_dir = ROOT / "results" / "figures" / country_code.lower()
+    else:
+        fig_dir = ROOT / "results" / "figures" / "non_bootstrap" / country_code.lower()
 
     evaluate_models.save_metrics_table(table, tables_dir / f"metrics_{suffix}{variant_suffix}.csv")
     evaluate_models.save_metrics_table(table, metrics_dir / f"metrics_{suffix}{variant_suffix}.csv")
