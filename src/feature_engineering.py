@@ -52,7 +52,7 @@ def drop_leakage_columns(df: pd.DataFrame) -> pd.DataFrame:
     Сейчас просто возвращаем копию — расширять можно при появлении id и т.п.
     """
     out = df.copy()
-    for col in ["customer_id", "application_id"]:
+    for col in ["customer_id", "application_id", "source_row_id"]:
         if col in out.columns:
             out = out.drop(columns=[col])
     return out

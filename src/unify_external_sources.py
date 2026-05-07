@@ -268,6 +268,7 @@ def bootstrap_expand(
     n_out: int,
     rng: np.random.Generator,
     jitter: bool = True,
+    add_source_id: bool = True,
 ) -> pd.DataFrame:
     """Раздуваю выборку с возвращением и слегка дёргаю числа, чтобы строки не были клонами."""
     if len(df) == 0:
@@ -275,6 +276,9 @@ def bootstrap_expand(
 
     idx = rng.integers(0, len(df), size=n_out)
     out = df.iloc[idx].reset_index(drop=True)
+
+    if add_source_id:
+        out["source_row_id"] = idx
 
     if not jitter:
         return out
@@ -317,6 +321,7 @@ def bootstrap_expand(
 def build_unified_datasets(
     target_n: int = 30_000,
     seed: int = 42,
+    save_non_bootstrap: bool = True,
 ) -> tuple[Path, Path]:
     """Собираю unified и перезаписываю data/raw/kazakhstan_credit.csv и russia_credit.csv."""
     root = _project_root()
@@ -346,8 +351,15 @@ def build_unified_datasets(
     unified_kz = kazakhstan_register_to_unified(df_kz_raw, rng_kz)
     unified_ru = russia_bureau_to_unified(df_ru_raw, rng_ru)
 
-    expanded_kz = bootstrap_expand(unified_kz, target_n, rng_kz, jitter=True)
-    expanded_ru = bootstrap_expand(unified_ru, target_n, rng_ru, jitter=True)
+    expanded_kz = bootstrap_expand(unified_kz, target_n, rng_kz, jitter=True, add_source_id=True)
+    expanded_ru = bootstrap_expand(unified_ru, target_n, rng_ru, jitter=True, add_source_id=True)
+
+
+    if save_non_bootstrap:
+        out_kz_non_bootstrap = raw_dir / "kazakhstan_credit_non_bootstrap.csv"
+        out_ru_non_bootstrap = raw_dir / "russia_credit_non_bootstrap.csv"
+        unified_kz[UNIFIED_COLUMNS].to_csv(out_kz_non_bootstrap, index=False, encoding="utf-8")
+        unified_ru[UNIFIED_COLUMNS].to_csv(out_ru_non_bootstrap, index=False, encoding="utf-8")
 
     for df in (expanded_kz, expanded_ru):
         missing = [c for c in UNIFIED_COLUMNS if c not in df.columns]
