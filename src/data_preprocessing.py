@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
@@ -87,6 +87,8 @@ def preprocess_dataframe(
     """
     Полный цикл для одной страны: фичи -> сплит -> fit на train -> transform train/test.
     """
+    groups = df["source_row_id"].values if "source_row_id" in df.columns else None
+
     df = drop_leakage_columns(df)
     df = add_engineered_features(df)
 
@@ -96,13 +98,21 @@ def preprocess_dataframe(
     X = df.drop(columns=["target"])
     y = df["target"].astype(int).values
 
-    X_train_df, X_test_df, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=test_size,
-        random_state=random_state,
-        stratify=y,
-    )
+    if groups is not None:
+        gss = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=random_state)
+        train_idx, test_idx = next(gss.split(X, y, groups=groups))
+        X_train_df = X.iloc[train_idx].copy()
+        X_test_df = X.iloc[test_idx].copy()
+        y_train = y[train_idx]
+        y_test = y[test_idx]
+    else:
+        X_train_df, X_test_df, y_train, y_test = train_test_split(
+            X,
+            y,
+            test_size=test_size,
+            random_state=random_state,
+            stratify=y,
+        )
 
     numeric_features, categorical_features = _numeric_categorical_columns(
         pd.concat([X_train_df, X_test_df], axis=0)
