@@ -1,2 +1,10 @@
 .mplconfig/
 .venv/
+# Generated binary artifacts for extended experiments
+models/*_non_bootstrap/
+results/figures/kz/*_non_bootstrap.png
+results/figures/ru/*_non_bootstrap.png
+
+# Generated non-bootstrap CSV artifacts
+data/raw/*_non_bootstrap.csv
+data/processed/*_non_bootstrap.csv

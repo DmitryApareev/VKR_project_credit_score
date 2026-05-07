@@ -1,0 +1,5 @@
+country,model,accuracy,precision,recall,f1,roc_auc
+KZ,logistic_regression,0.6453,0.1141,0.4762,0.184,0.6043
+KZ,decision_tree,0.5627,0.0846,0.4286,0.1414,0.4944
+KZ,random_forest,0.8893,0.0833,0.0317,0.046,0.5907
+KZ,gradient_boosting,0.9093,0.1429,0.0159,0.0286,0.5301
